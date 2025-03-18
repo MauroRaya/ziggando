@@ -1,10 +1,23 @@
 const std = @import("std");
+const ArrayList = std.ArrayList;
+const page_allocator = std.heap.page_allocator;
+
 pub fn main() !void {
     const stdout = std.io.getStdOut().writer();
+    var number: i64 = 0;
+    var count: i64 = 1;
+    var list = ArrayList(i64).init(page_allocator);
 
-    try stdout.print("Digita um numero ai folgado: ", .{});
-    const number = try getNumberTerminal();
-    std.debug.print("Numero: {d}", .{number});
+    while (number != -1) {
+        try stdout.print("Digite numero {d}: ", .{count});
+        number = try getNumberTerminal();
+        try list.append(number);
+        count += 1;
+    }
+
+    for (list.items) |num| {
+        std.debug.print("Numero: {d}\n", .{num});
+    }
 }
 
 pub fn getNumberTerminal() !i64 {
